@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  resources :survivors, only: [:create, :update, :index]
+  resources :survivors, only: [:edit, :new, :create, :update, :index]
 end
