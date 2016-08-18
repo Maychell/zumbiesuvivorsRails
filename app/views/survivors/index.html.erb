@@ -1,0 +1,20 @@
+<table>
+	<thead>
+		<th>Name</th>
+		<th>Gender</th>
+		<th>Age</th>
+		<th>Latitude</th>
+		<th>Longitude</th>
+		<th></th>
+	</thead>
+	<% @survivors.each do |survivor| %>
+		<tbody>
+			<td><%= survivor.name %></td>
+			<td><%= survivor.gender %></td>
+			<td><%= survivor.age %></td>
+			<td><%= survivor.latitude %></td>
+			<td><%= survivor.longitude %></td>
+			<td>edit</td>
+		</tbody>
+	<% end %>
+</table>
