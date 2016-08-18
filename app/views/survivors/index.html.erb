@@ -1,5 +1,8 @@
+<h1>Survivors</h1>
+<%= link_to 'new survivor', new_survivor_path %>
 <table>
 	<thead>
+		<th>id</th>
 		<th>Name</th>
 		<th>Gender</th>
 		<th>Age</th>
@@ -9,12 +12,13 @@
 	</thead>
 	<% @survivors.each do |survivor| %>
 		<tbody>
+			<td><%= survivor.id %></td>
 			<td><%= survivor.name %></td>
 			<td><%= survivor.gender %></td>
 			<td><%= survivor.age %></td>
 			<td><%= survivor.latitude %></td>
 			<td><%= survivor.longitude %></td>
-			<td>edit</td>
+			<td><%= link_to 'edit', edit_survivor_path(survivor) %></td>
 		</tbody>
 	<% end %>
 </table>
