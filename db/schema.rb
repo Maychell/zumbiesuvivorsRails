@@ -11,19 +11,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160818120242) do
+ActiveRecord::Schema.define(version: 20160818135202) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "complaints", force: :cascade do |t|
+    t.integer  "survivor_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
 
   create_table "survivors", force: :cascade do |t|
     t.string   "name"
     t.integer  "age"
     t.string   "latitude"
     t.string   "longitude"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.integer  "gender"
+    t.boolean  "infected",   default: false
   end
 
 end
