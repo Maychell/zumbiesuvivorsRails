@@ -1,3 +1,9 @@
+<% if @survivor.errors.full_messages.any? %>
+  <% @survivor.errors.full_messages.each do |error_message| %>
+    <%= error_message if @survivor.errors.full_messages.first == error_message %> <br />
+  <% end %>
+<% end %>
+
 <%= form_for @survivor do |f| %>
 	<div>
 		<%= f.label :name %>
@@ -11,5 +17,20 @@
 		<%= f.label :gender %>
 		<%= f.select :gender, ["male", "female"] %>
 	</div>
+	<h2>ITEMS</h2>
+	<%= f.fields_for :inventories do |inventory| %>
+		<div class="inventory_item">
+			<%= inventory.label :item_id %>
+			<%= inventory.select :item_id, options_for_select(Item.all.collect { |item| [item.name, item.id] }, 0), {} %>
+      <a href="#" id="add_item">add item</a>
+		</div>
+	<% end %>
 	<%= f.submit %>
 <% end %>
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#add_item").click(function(){
+    // alert('hehe');
+  });
+});
+</script>
