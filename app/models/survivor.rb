@@ -1,14 +1,20 @@
 class Survivor < ActiveRecord::Base
-	validates :name, :age, :gender,
-		presence: true
+  has_many :inventories, dependent: :destroy
+  has_many :items, through: :inventories
 
-	enum gender: { male: 0, female: 1 }
+  accepts_nested_attributes_for :inventories
+  # accepts_nested_attributes_for :items
 
-	# set default order query
-	default_scope { order(:id) }
+  validates :name, :age, :gender,
+    presence: true
 
-	def set_infected
-		self.infected = true
-		self.save!
-	end
+  enum gender: { male: 0, female: 1 }
+
+  # set default order query
+  default_scope { order(:id) }
+
+  def set_infected
+    self.infected = true
+    self.save!
+  end
 end
