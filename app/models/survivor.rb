@@ -3,7 +3,6 @@ class Survivor < ActiveRecord::Base
   has_many :items, through: :inventories
 
   accepts_nested_attributes_for :inventories
-  # accepts_nested_attributes_for :items
 
   validates :name, :age, :gender,
     presence: true
