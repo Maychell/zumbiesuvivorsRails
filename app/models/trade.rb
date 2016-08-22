@@ -2,7 +2,7 @@ class Trade
 	attr_reader :trade
 
 	def initialize(params)
-    @trade = build_trade(params)
+    @trade = trade_init(params)
 	end
 
 	def valid?
@@ -19,66 +19,58 @@ class Trade
   end
 
   def trade!
-    # aux gets all the items from left side of the trade
-    aux = @trade[:left][:items]
+    ActiveRecord::Base.transaction do
+      delete_from_trade(@trade[:left])
+      delete_from_trade(@trade[:right])
 
-    # delete items from database from left side
-    delete_from_trade(@trade[:left])
-
-    # save items from right side to left side
-    save_from_trade(@trade[:left][:survivor], @trade[:right][:items])
-
-    # delete items from database right side
-    delete_from_trade(@trade[:right])
-
-    # save items from aux to right side
-    save_from_trade(@trade[:right][:survivor], aux)
+      save_from_trade(@trade[:left][:survivor], @trade[:right][:items])
+      save_from_trade(@trade[:right][:survivor], @trade[:left][:items])
+    end
   end
 
   private
 
   def items_count(items)
-    amount = 0
-    items.each do |item|
-      amount += item.points
-    end
-    return amount
+    items.map(&:points).inject(:+)
   end
 
-  def build_trade(params)
-    left = params[:trade][0]
-    right = params[:trade][1]
+  def trade_init(params)
+    left, right = Array(params[:trade])
 
-    ids = build_ids(left[:items])
+    ids_left = build_ids(left[:items])
     ids_right = build_ids(right[:items])
 
-    @trade_left = {survivor: Survivor.find(left[:survivor_id]), items: Item.where(id: ids)}
-    @trade_right = {survivor: Survivor.find(right[:survivor_id]), items: Item.where(id: ids_right)}
+    trade_left = build_trade(
+      Survivor.find(left[:survivor_id]),
+      Item.where(id: ids_left)
+    )
+    trade_right = build_trade(
+      Survivor.find(right[:survivor_id]),
+      Item.where(id: ids_right)
+    )
 
-    return {left: @trade_left, right: @trade_right}
+    { left: trade_left, right: trade_right }
+  end
+
+  def build_trade(survivor, items)
+    { survivor: survivor, items: items }
   end
 
   def build_ids(items_id)
-    ids = []
-    items_id.each do |item|
-      ids << item[:id]
-    end
-
-    return ids
+    items_id.map { |item| item[:id] }
   end
 
   def delete_from_trade(survivor_items)
-    survivor_items[:items].each do |item|
-      de = survivor_items[:survivor].inventories.where(item_id: item.id).first
-      de.destroy
-    end
+    ids = survivor_items[:items].map(&:id)
+    items = survivor_items[:survivor].inventories.where(item_id: ids)
+    items.destroy_all
   end
 
   def save_from_trade(survivor, items)
     items.each do |item|
       de = survivor.inventories.build
       de.item = item
-      de.save
+      de.save!
     end
   end
 end

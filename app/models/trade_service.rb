@@ -1,7 +1,10 @@
 class TradeService
-	def call(params)
-    initialize_trade(params)
-    if @trade.valid? && @trade.same_items_amount?
+  def initialize(trade)
+    @trade = trade
+  end
+
+	def call
+    if valid_trade?
       trade!
       true
     else
@@ -11,8 +14,8 @@ class TradeService
 
   private
 
-  def initialize_trade(params)
-    @trade = Trade.new(params)
+  def valid_trade?
+    @trade.valid? && @trade.same_items_amount?
   end
 
   def trade!
