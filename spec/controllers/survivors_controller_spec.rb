@@ -18,6 +18,17 @@ RSpec.describe SurvivorsController, type: :controller do
     expect(response).to render_template("new")
   end
 
+  it "renders the edit template" do
+    survivor = Survivor.create!(name: "test", age: 12, gender: :female)
+    get :edit, { id: survivor.id }
+    expect(response).to render_template("edit")
+  end
+
+  it "renders the new template" do
+    get :new
+    expect(response).to render_template("new")
+  end
+
   it "renders the index template with survivors array" do
     survivor1 = Survivor.create(name: "survivor", age: 19, gender: 0)
     survivor2 = Survivor.create(name: "survivor 2", age: 29, gender: 1)
@@ -26,10 +37,36 @@ RSpec.describe SurvivorsController, type: :controller do
     expect(assigns(:survivors)).to match_array([survivor1, survivor2])
   end
 
-  # it "creates a new survivor" do
-  #   attributes = {name: "fdsf", age: 12, gender: 0}
-  #   expect{
-  #     post :create, { :survivor => attributes }
-  #   }.to change(Survivor,:count).by(1)
-  # end
+  it "creates a new survivor" do
+    attributes = {name: "teste", age: 12, gender: :female}
+    expect{
+      post :create, { :survivor => attributes }
+    }.to change(Survivor,:count).by(1)
+  end
+
+  it "updates a survivor location" do
+    survivor = Survivor.create!(name: "test", age: 12, gender: :female)
+    attributes = { latitude: "100000", longitude: "4324234342" }
+
+    put :update, { id: survivor.id, :survivor => attributes }
+    survivor.reload
+
+    expect(survivor.latitude).to eq(attributes[:latitude])
+    expect(survivor.longitude).to eq(attributes[:longitude])
+  end
+
+  it "updates only the survivor location" do
+    survivor = Survivor.create!(name: "test", age: 12, gender: :female)
+    attributes = { latitude: "100000", longitude: "4324234342", name: "test atualizado", age: 30, gender: :male }
+
+    put :update, { id: survivor.id, :survivor => attributes }
+    survivor.reload
+
+    expect(survivor.latitude).to eq(attributes[:latitude])
+    expect(survivor.longitude).to eq(attributes[:longitude])
+    expect(survivor.name).to eq("test")
+    expect(survivor.age).to eq(12)
+    expect(survivor.gender).to eq("female")
+  end
+
 end

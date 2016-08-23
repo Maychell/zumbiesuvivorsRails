@@ -26,8 +26,8 @@ RSpec.describe Trade, type: :model do
     TradeService.new(trade).call
 
     # refresh the survivors
-    survivor1 = Survivor.find(survivor1.id)
-    survivor2 = Survivor.find(survivor2.id)
+    survivor1.reload
+    survivor2.reload
 
     item_after1 = Item.where(id: [2, 3, 2])
     item_after2 = Item.where(id: [1, 4, 1])
@@ -55,8 +55,8 @@ RSpec.describe Trade, type: :model do
     TradeService.new(trade).call
 
     # refresh the survivors
-    survivor1 = Survivor.find(survivor1.id)
-    survivor2 = Survivor.find(survivor2.id)
+    survivor1.reload
+    survivor2.reload
 
      #items should be the same
     expect(survivor1.items).to eq(items1)
@@ -80,8 +80,8 @@ RSpec.describe Trade, type: :model do
     TradeService.new(trade).call
 
     # refresh the survivors
-    survivor1 = Survivor.find(survivor1.id)
-    survivor2 = Survivor.find(survivor2.id)
+    survivor1.reload
+    survivor2.reload
 
      #items should be the same
     expect(survivor1.items).to eq(items1)
@@ -105,8 +105,8 @@ RSpec.describe Trade, type: :model do
     TradeService.new(trade).call
 
     # refresh the survivors
-    survivor1 = Survivor.find(survivor1.id)
-    survivor2 = Survivor.find(survivor2.id)
+    survivor1.reload
+    survivor2.reload
 
      #items should be the same
     expect(survivor1.items).to eq(items1)
