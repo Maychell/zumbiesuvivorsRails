@@ -20,11 +20,11 @@ class Trade
 
   def trade!
     ActiveRecord::Base.transaction do
-      delete_from_trade(@trade[:left])
-      delete_from_trade(@trade[:right])
+      destroy_survivor_items(@trade[:left])
+      destroy_survivor_items(@trade[:right])
 
-      save_from_trade(@trade[:left][:survivor], @trade[:right][:items])
-      save_from_trade(@trade[:right][:survivor], @trade[:left][:items])
+      save_survivor_items(@trade[:left][:survivor], @trade[:right][:items])
+      save_survivor_items(@trade[:right][:survivor], @trade[:left][:items])
     end
   end
 
@@ -60,17 +60,17 @@ class Trade
     items_id.map { |item| item[:id] }
   end
 
-  def delete_from_trade(survivor_items)
+  def destroy_survivor_items(survivor_items)
     ids = survivor_items[:items].map(&:id)
     items = survivor_items[:survivor].inventories.where(item_id: ids)
     items.destroy_all
   end
 
-  def save_from_trade(survivor, items)
+  def save_survivor_items(survivor, items)
     items.each do |item|
-      de = survivor.inventories.build
-      de.item = item
-      de.save!
+      survivor.inventories.build
+      survivor.item = item
+      survivor.save!
     end
   end
 end
