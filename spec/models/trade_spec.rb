@@ -8,6 +8,7 @@ require 'rails_helper'
 ##   4     1
 
 RSpec.describe Trade, type: :model do
+
   it "test sucessiful trade" do
   	# setting the first survivor
   	items1 = Item.where(id: [1, 2, 4]) #total points: 4+3+1 = 8
@@ -35,6 +36,7 @@ RSpec.describe Trade, type: :model do
     expect(survivor1.items).to eq(item_after1)
     expect(survivor2.items).to eq(item_after2)
   end
+
   it "test trade when it's infected survivor" do
     # setting the first survivor
     items1 = Item.where(id: [1, 2, 4]) #total points: 4+3+1 = 8
@@ -62,6 +64,7 @@ RSpec.describe Trade, type: :model do
     expect(survivor1.items).to eq(items1)
     expect(survivor2.items).to eq(items2)
   end
+
   it "test with items that the survivor doesn't own" do
     # setting the first survivor
     items1 = Item.where(id: [1, 2]) #total points: 4+3+1 = 8
@@ -87,6 +90,7 @@ RSpec.describe Trade, type: :model do
     expect(survivor1.items).to eq(items1)
     expect(survivor2.items).to eq(items2)
   end
+  
   it "test items with different sum of points" do
     # setting the first survivor
     items1 = Item.where(id: [1, 2, 4]) #total points: 4+3+1 = 8
