@@ -4,8 +4,8 @@ class Survivor < ActiveRecord::Base
 
   accepts_nested_attributes_for :inventories
 
-  validates :name, :age, :gender,
-    presence: true
+  # validates :name, :age, :gender,
+  #   presence: true
 
   enum gender: %i[ male female ]
 
