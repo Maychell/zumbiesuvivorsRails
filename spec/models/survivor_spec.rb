@@ -1,18 +1,20 @@
 require 'rails_helper'
 
 RSpec.describe Survivor, type: :model do
-  it "survivors order by id" do
-    lindeman = Survivor.create!(name: "Teste automatico", age: 200, gender: 0)
-    chelimsky = Survivor.create!(name: "Teste automatico 2", age: 190, gender: 1)
-    joao = Survivor.create!(name: "Teste automatico joao", age: 19, gender: 0)
-    maria = Survivor.create!(name: "Teste automatico maria", age: 12, gender: 1)
-    jose = Survivor.create!(name: "Teste automatico jose", age: 40, gender: 0)
+  let(:items) { Item.all.map { |item| [item.name, item] }.to_h }
 
-    expect(Survivor.all).to eq([lindeman, chelimsky, joao, maria, jose])
+  it "survivors order by id" do
+    fulano = FactoryGirl.create(:survivor)
+    chelimsky = FactoryGirl.create(:survivor_chelimsky)
+    joao = FactoryGirl.create(:survivor_joao)
+    maria = FactoryGirl.create(:survivor_maria)
+    jose = FactoryGirl.create(:survivor_jose)
+
+    expect(Survivor.all).to eq([fulano, chelimsky, joao, maria, jose])
   end
 
   it "survivor not infected by default" do
-    survivor = Survivor.create!(name: "infected survivor", age: 20, gender: 1)
+    survivor = FactoryGirl.create(:survivor)
 
     expect(survivor.infected).to eq(false)
   end
@@ -25,10 +27,8 @@ RSpec.describe Survivor, type: :model do
   end
 
   it "test items when creating survivor" do
-    items = Item.where(id: [1, 2, 4])
-    survivor = Survivor.create!(name: "Teste automatico",
-      age: 200, gender: 0, items: items)
+    survivor = FactoryGirl.create(:survivor, items: [items['1 Water'], items['1 Food'], items['1 Ammunition']])
 
-    expect(survivor.items).to eq(items)
+    expect(survivor.items).to eq([items['1 Water'], items['1 Food'], items['1 Ammunition']])
   end
 end

@@ -42,11 +42,11 @@ class Trade
 
     trade_left = build_trade(
       Survivor.find(left[:survivor_id]),
-      Item.where(id: ids_left)
+      ids_left.map { |id| Item.find(id) }
     )
     trade_right = build_trade(
       Survivor.find(right[:survivor_id]),
-      Item.where(id: ids_right)
+      ids_right.map { |id| Item.find(id) }
     )
 
     { left: trade_left, right: trade_right }
@@ -61,16 +61,13 @@ class Trade
   end
 
   def destroy_survivor_items(survivor_items)
-    ids = survivor_items[:items].map(&:id)
-    items = survivor_items[:survivor].inventories.where(item_id: ids)
-    items.destroy_all
+    survivor_items[:items].each do |item|
+      item = survivor_items[:survivor].inventories.where(item_id: item.id).first
+      item.destroy!
+    end
   end
 
   def save_survivor_items(survivor, items)
-    items.each do |item|
-      survivor.inventories.build
-      survivor.item = item
-      survivor.save!
-    end
+    survivor.items << items
   end
 end

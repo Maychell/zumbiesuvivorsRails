@@ -4,20 +4,41 @@ class SurvivorsController < ApplicationController
   def new
     @survivor = Survivor.new
     @survivor.inventories.build
+    # @form = SurvivorForm.new(Survivor.new)
   end
 
   def create
-    @survivor = Survivor.new(survivor_params)
-    
-    respond_to do |format|
-      if @survivor.save
-        format.html { redirect_to action: "index" }
-        format.json { render json: @survivor}
-      else
-        format.html { render action: "new" }
-        format.json { render json: @survivor.errors, status: :unprocessable_entity }
-      end
+
+    # @contract = Survivor::Create.run(params[:survivor]) do |contract|
+      # return redirect_to(contract.model) # success.
+    # end
+
+    # render :new
+
+    run Survivor::Create do |op|
+      return redirect_to op.model # success.
     end
+
+    # Survivor::Create.run(params[:survivor]) do |contract|
+    #   return redirect_to(contract.model)
+    # end
+
+    @survivors = Survivor.all
+
+    render action: :index
+
+
+    # @survivor = Survivor.new(survivor_params)
+    
+    # respond_to do |format|
+    #   if @survivor.save
+    #     format.html { redirect_to action: "index" }
+    #     format.json { render json: @survivor}
+    #   else
+    #     format.html { render action: "new" }
+    #     format.json { render json: @survivor.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   def edit

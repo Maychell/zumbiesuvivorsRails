@@ -19,7 +19,7 @@ RSpec.describe SurvivorsController, type: :controller do
   end
 
   it "renders the edit template" do
-    survivor = Survivor.create!(name: "test", age: 12, gender: :female)
+    survivor = FactoryGirl.create(:survivor)
     get :edit, { id: survivor.id }
     expect(response).to render_template("edit")
   end
@@ -30,8 +30,8 @@ RSpec.describe SurvivorsController, type: :controller do
   end
 
   it "renders the index template with survivors array" do
-    survivor1 = Survivor.create(name: "survivor", age: 19, gender: 0)
-    survivor2 = Survivor.create(name: "survivor 2", age: 29, gender: 1)
+    survivor1 = FactoryGirl.create(:survivor)
+    survivor2 = FactoryGirl.create(:survivor_joao)
     get :index
 
     expect(assigns(:survivors)).to match_array([survivor1, survivor2])
@@ -45,7 +45,7 @@ RSpec.describe SurvivorsController, type: :controller do
   end
 
   it "updates a survivor location" do
-    survivor = Survivor.create!(name: "test", age: 12, gender: :female)
+    survivor = FactoryGirl.create(:survivor)
     attributes = { latitude: "100000", longitude: "4324234342" }
 
     put :update, { id: survivor.id, :survivor => attributes }

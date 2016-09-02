@@ -26,6 +26,8 @@ require 'rspec/rails'
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
 
+Dir[File.expand_path('../support', __FILE__) + '/*'].each { |file| require file }
+
 ZombieSurvivor::Application.load_tasks
 Rake::Task['db:seed'].invoke
 
