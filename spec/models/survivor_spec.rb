@@ -2,12 +2,13 @@ require 'rails_helper'
 
 RSpec.describe Survivor, type: :model do
   let(:items) { Item.all.map { |item| [item.name, item] }.to_h }
+  let(:survivor) {
+    survivor = Survivor::Create.(
+      survivor: { name: "Rails", age: 12, gender: :male }
+    ).model
+  }
 
   it "persists valid" do
-    survivor = Survivor::Create[survivor:
-      {name: "Rails", age: 12, gender: :male}
-    ].model
-
     expect(survivor.persisted?).to eq(true)
     expect(survivor.name).to eq("Rails")
     expect(survivor.age).to eq(12)
@@ -15,8 +16,8 @@ RSpec.describe Survivor, type: :model do
   end
 
   it "tries to persist invalid" do
-    res, survivor = Survivor::Create.run(survivor:
-      {name: "", age: 106, gender: ""}
+    res, survivor = Survivor::Create.run(
+      survivor: { name: "", age: 106, gender: "" }
     )
 
     expect(res).to eq(false)
@@ -27,13 +28,21 @@ RSpec.describe Survivor, type: :model do
   end
 
   it "survivors order by id" do
-    fulano = FactoryGirl.create(:survivor)
-    chelimsky = FactoryGirl.create(:survivor_chelimsky)
-    joao = FactoryGirl.create(:survivor_joao)
-    maria = FactoryGirl.create(:survivor_maria)
-    jose = FactoryGirl.create(:survivor_jose)
+    fulano = survivor
+    chelimsky = Survivor::Create.(
+                  survivor: { name: "chelimsky", age: 12, gender: :male }
+                ).model
+    joao = Survivor::Create.(
+                  survivor: { name: "Joao", age: 12, gender: :male }
+                ).model
+    maria = Survivor::Create.(
+                  survivor: { name: "Maria", age: 12, gender: :female }
+                ).model
+    jose = Survivor::Create.(
+                  survivor: { name: "Jose", age: 102, gender: :male }
+                ).model
 
-    expect(Survivor.all).to eq([fulano, chelimsky, joao, maria, jose])
+    expect(Survivor.all.to_json).to eq([fulano, chelimsky, joao, maria, jose].to_json)
   end
 
   it "survivor not infected by default" do

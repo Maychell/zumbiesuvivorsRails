@@ -15,17 +15,27 @@ class SurvivorsController < ApplicationController
 
     # render :new
 
-    run Survivor::Create do |op|
-      return redirect_to op.model # success.
+    respond_to do |format|
+      run Survivor::Create do |op|
+        format.html { redirect_to action: "index" }
+        format.json { render json: op.model, status: :success }
+      end
+
+      format.html { render action: "new" }
+      format.json { render json: @op.model.contract.errors, status: :unprocessable_entity }
     end
+
+    # run Survivor::Create do |op|
+    #   return redirect_to op.model, status: :success # success.
+    # end
 
     # Survivor::Create.run(params[:survivor]) do |contract|
     #   return redirect_to(contract.model)
     # end
 
-    @survivors = Survivor.all
+    # @survivors = Survivor.all
 
-    render action: :index
+    # render action: :index
 
 
     # @survivor = Survivor.new(survivor_params)
