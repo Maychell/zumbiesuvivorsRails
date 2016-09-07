@@ -3,11 +3,11 @@ require 'rails_helper'
 RSpec.describe SurvivorsController, type: :controller do
 
   let(:survivor) {
-    Survivor::Create[
+    Survivor::Create.(
       survivor: {
-        name: "Rails", age:14, gender: :female
+        name: "Rails", age: 14, gender: :female
       }
-    ].model
+    ).model
   }
 
   it "responds successfully with an HTTP 200 status code" do
@@ -37,9 +37,9 @@ RSpec.describe SurvivorsController, type: :controller do
   end
 
   it "renders the index template with survivors array" do
-    survivor2 = Survivor::Create[
+    survivor2 = Survivor::Create.(
       survivor: { name: "Rails", age:14, gender: :female }
-    ].model
+    ).model
 
     get :index
 
@@ -48,11 +48,9 @@ RSpec.describe SurvivorsController, type: :controller do
 
   # fix this test
   it "creates a new survivor" do
-    # attributes = {name: "teste", age: 12, gender: :female}
-    # expect{
-      post :create, { survivor: { name: "Rails", age:14, gender: :female } }
-      expect(response.status).to eq(200)
-    # }.to change(Survivor,:count).by(1)
+    expect{
+      post :create, { survivor: { name: "Rails", age: 14, gender: :female } }
+    }.to change(Survivor,:count).by(1)
   end
 
   it "updates a survivor location" do
@@ -66,7 +64,7 @@ RSpec.describe SurvivorsController, type: :controller do
   end
 
   it "updates only the survivor location" do
-    attributes = { latitude: "100000", longitude: "4324234342", name: "test atualizado", age: 30, gender: :male }
+    attributes = { latitude: "100000", longitude: "4324234342", name: "test", age: 30, gender: :male }
 
     put :update, { id: survivor.id, :survivor => attributes }
     survivor.reload

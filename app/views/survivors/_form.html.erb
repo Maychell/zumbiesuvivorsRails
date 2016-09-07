@@ -1,6 +1,6 @@
-<% if @survivor.errors.full_messages.any? %>
-  <% @survivor.errors.full_messages.each do |error_message| %>
-    <%= error_message if @survivor.errors.full_messages.first == error_message %> <br />
+<% if @contract && @contract.errors.full_messages.any? %>
+  <% @contract.errors.full_messages.each do |error_message| %>
+    <%= error_message if @contract.errors.full_messages.first == error_message %> <br />
   <% end %>
 <% end %>
 
