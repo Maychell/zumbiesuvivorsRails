@@ -52,7 +52,11 @@ RSpec.describe Survivor, type: :model do
     end
 
     it "survivor set infected" do
-      survivor.set_infected
+      Survivor::SetInfected.(
+        id: survivor.id
+      )
+
+      survivor.reload
 
       expect(survivor.infected).to eq(true)
     end
@@ -104,7 +108,9 @@ RSpec.describe Survivor, type: :model do
     end
 
     it "tries to update the survivor's infected inventory" do
-      survivor.set_infected
+      Survivor::SetInfected.(
+        id: survivor.id
+      )
 
       Survivor::Update.(
         id: survivor.id,

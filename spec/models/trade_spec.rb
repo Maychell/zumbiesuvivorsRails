@@ -23,15 +23,25 @@ RSpec.describe Trade, type: :model do
   let(:water) { items['1 Water'] }
   let(:ammunition) { items['1 Ammunition'] }
   let(:medication) { items['1 Medication'] }
+  let(:survivor) {
+    Survivor::Create.(
+      survivor: {
+        name: "Rails", age: 14, gender: :female, items: [water, food, ammunition]
+      }
+    ).model
+  }
 
   it "test sucessiful trade non-repeating items" do
-    survivor1 = FactoryGirl.create(:survivor, items: [water])
-    survivor2 = FactoryGirl.create(:survivor, items: [food, medication, ammunition])
+    survivor2 = Survivor::Create.(
+      survivor: {
+        name: "Rails", age: 14, gender: :female, items: [food, medication, ammunition]
+      }
+    ).model
 
     params = {
       trade:[
         {
-          survivor_id: survivor1.id,
+          survivor_id: survivor.id,
           items:[
             { id: water.id }
           ]
@@ -49,13 +59,22 @@ RSpec.describe Trade, type: :model do
     trade = Trade.new(params)
     TradeService.new(trade).call
 
-    expect(survivor1).to have_items([food.name, ammunition.name])
+    expect(survivor).to have_items([food.name, ammunition.name, food.name, ammunition.name])
     expect(survivor2).to have_items([water.name, medication.name])
   end
 
   it "test sucessiful trade repeating items" do
-    survivor1 = FactoryGirl.create(:survivor, items: [water, medication, water])
-    survivor2 = FactoryGirl.create(:survivor, items: [food, medication, ammunition, food])
+    survivor1 = Survivor::Create.(
+      survivor: {
+        name: "Rails", age: 14, gender: :female, items: [water, medication, water]
+      }
+    ).model
+
+    survivor2 = Survivor::Create.(
+      survivor: {
+        name: "Rails", age: 14, gender: :female, items: [food, medication, ammunition, food]
+      }
+    ).model
 
     params = {
       trade:[
@@ -84,15 +103,20 @@ RSpec.describe Trade, type: :model do
   end
 
   it "test trade when it's infected survivor" do
-    survivor1 = FactoryGirl.create(:survivor, items: [water, food, ammunition])
-    survivor1.set_infected
+    Survivor::SetInfected.(
+      id: survivor.id
+    )
 
-    survivor2 = FactoryGirl.create(:survivor, items: [food, medication, water])
+    survivor2 = Survivor::Create.(
+      survivor: {
+        name: "test", age: 12, gender: :male, items: [food, medication, water]
+      }
+    ).model
 
     params = {
       trade:[
         {
-          survivor_id: survivor1.id,
+          survivor_id: survivor.id,
           items:[
             { id: water.id },
             { id: ammunition.id }
@@ -111,18 +135,21 @@ RSpec.describe Trade, type: :model do
     trade = Trade.new(params)
     TradeService.new(trade).call
 
-    expect(survivor1).to have_items([water.name, food.name, ammunition.name])
+    expect(survivor).to have_items([water.name, food.name, ammunition.name])
     expect(survivor2).to have_items([food.name, medication.name, water.name])
   end
 
   it "test with items that the survivor doesn't own" do
-    survivor1 = FactoryGirl.create(:survivor, items: [water, food])
-    survivor2 = FactoryGirl.create(:survivor, items: [food, medication, water])
+    survivor2 = Survivor::Create.(
+      survivor: {
+        name: "test", age: 12, gender: :male, items: [food, medication, water]
+      }
+    ).model
 
     params = {
       trade:[
         {
-          survivor_id: survivor1.id,
+          survivor_id: survivor.id,
           items:[
             {id: medication.id},
             {id: food.id}
@@ -141,18 +168,21 @@ RSpec.describe Trade, type: :model do
     trade = Trade.new(params)
     TradeService.new(trade).call
 
-    expect(survivor1).to have_items([food.name, water.name])
+    expect(survivor).to have_items([food.name, water.name, ammunition.name])
     expect(survivor2).to have_items([food.name, medication.name, water.name])
   end
 
   it "test items with different sum of points" do
-    survivor1 = FactoryGirl.create(:survivor, items: [water, food, ammunition])
-    survivor2 = FactoryGirl.create(:survivor, items: [food, medication, water])
+    survivor2 = Survivor::Create.(
+      survivor: {
+        name: "test", age: 12, gender: :male, items: [food, medication, water]
+      }
+    ).model
 
     params = {
       trade:[
         {
-          survivor_id: survivor1.id,
+          survivor_id: survivor.id,
           items:[
             {id: water.id},
             {id: food.id}
@@ -171,7 +201,7 @@ RSpec.describe Trade, type: :model do
     trade = Trade.new(params)
     TradeService.new(trade).call
 
-    expect(survivor1).to have_items([water.name, food.name, ammunition.name])
+    expect(survivor).to have_items([water.name, food.name, ammunition.name])
     expect(survivor2).to have_items([food.name, medication.name, water.name])
   end
 end

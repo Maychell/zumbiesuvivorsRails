@@ -9,13 +9,15 @@ class SurvivorsController < ApplicationController
   end
 
   def create
-    # test = survivor_params
-    # binding.pry
-    @survivor = run Survivor::Create do
-      return redirect_to action: "index"
+    respond Survivor::Create do |op, format|
+      if op.valid?
+        format.html { redirect_to action: :index }
+        format.json { render json: op.model }
+      else
+        format.html { render :new }
+        format.json { render json: op.errors, status: :unprocessable_entity }
+      end
     end
-
-    render :new
   end
 
   def edit
@@ -23,11 +25,15 @@ class SurvivorsController < ApplicationController
   end
 
   def update
-    @survivor = run Survivor::Update do
-      return redirect_to action: "index"
+    respond Survivor::Update do |op, format|
+      if op.valid?
+        format.html { redirect_to action: :index }
+        format.json { render json: op.model }
+      else
+        format.html { render :new }
+        format.json { render json: op.errors, status: :unprocessable_entity }
+      end
     end
-
-    render :new
   end
 
   def index

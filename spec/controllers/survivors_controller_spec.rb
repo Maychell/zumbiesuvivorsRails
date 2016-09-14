@@ -54,10 +54,11 @@ RSpec.describe SurvivorsController, type: :controller do
 
   # didn't finish yet
   it "tests json format response" do
-    post :create, { survivor: { name: "Rails", age: 14, gender: :female } },
-      { 'Accept' => Mime::JSON, 'Content-Type' => Mime::JSON.to_s }
+    form = { survivor: { name: "Rails", age: 14, gender: :female } }
+    post :create, form.to_json, form.merge(format: 'json')
 
     assert_equal Mime::JSON, response.content_type
+
     # post :create, { survivor: { name: "Rails", age: 14, gender: :female } }, { 'Accept' => Mime::JSON }
     # puts 'teste: '
     # puts response.content_type

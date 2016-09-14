@@ -2,7 +2,11 @@ require 'rails_helper'
 
 RSpec.describe ComplaintsController, type: :controller do
 
-  let(:survivor) { FactoryGirl.create(:survivor) }
+  let(:survivor) { Survivor::Create.(
+      survivor: {
+        name: "test", age: 12, gender: :male
+      }
+    ).model }
   let(:attributes) { { survivor_id: survivor.id } }
 
   it "responds successfully with an HTTP 200 status code" do

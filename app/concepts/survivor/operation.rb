@@ -17,10 +17,6 @@ class Survivor < ActiveRecord::Base
         f.save
       end
     end
-
-    class JSON < self
-      # include JSON
-    end
   end
 
   class Update < Create
@@ -37,9 +33,18 @@ class Survivor < ActiveRecord::Base
     end
   end
 
-  class Show < Trailblazer::Operation
-  end
+  class SetInfected < Create
+    action :update
 
-  class Delete < Trailblazer::Operation
+    def process(params)
+      set_infected!
+    end
+
+    private
+
+    def set_infected!
+      model.infected = true
+      model.save!
+    end
   end
 end
