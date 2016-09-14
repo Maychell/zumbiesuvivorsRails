@@ -1,10 +1,10 @@
 class ComplaintsController < ApplicationController
 	include Trailblazer::Operation::Controller
+	skip_before_action :verify_authenticity_token
 
   respond_to :html, :json
 
 	def new
-		# @complaint = Complaint.new
 		form Complaint::Create
 	end
 
