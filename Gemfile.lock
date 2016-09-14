@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/apotonick/roar.git
+  revision: 5d3c2f15552b09a6b5b01ab87a6ba6df3c16e744
+  specs:
+    roar (1.0.3)
+      representable (>= 2.4.0, < 3.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -60,8 +67,6 @@ GEM
       uber
     erubis (2.7.0)
     execjs (2.7.0)
-    factory_girl (4.7.0)
-      activesupport (>= 3.0.0)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
     i18n (0.7.0)
@@ -133,6 +138,8 @@ GEM
     representable (3.0.0)
       declarative (~> 0.0.5)
       uber (~> 0.0.15)
+    responders (2.1.0)
+      railties (>= 4.2.0, < 5)
     rspec-core (3.5.2)
       rspec-support (~> 3.5.0)
     rspec-expectations (3.5.0)
@@ -201,12 +208,13 @@ PLATFORMS
 DEPENDENCIES
   byebug
   coffee-rails (~> 4.1.0)
-  factory_girl
   jbuilder (~> 2.0)
   jquery-rails
   pg (~> 0.15)
   pry
   rails (= 4.2.4)
+  responders
+  roar!
   rspec-rails (~> 3.5)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)

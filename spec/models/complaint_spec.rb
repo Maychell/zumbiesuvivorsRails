@@ -2,7 +2,11 @@ require 'rails_helper'
 
 RSpec.describe Complaint, type: :model do
 
-  let(:survivor) { FactoryGirl.create(:survivor) }
+  let(:survivor) { Survivor::Create.(
+      survivor: {
+        name: "test", age: 12, gender: :male
+      }
+    ).model }
 
   it "check infected by creating complaints" do
     expect(survivor.infected).to eq(false)
@@ -13,6 +17,8 @@ RSpec.describe Complaint, type: :model do
       Complaint.create!(survivor: survivor)
     }
 
+    survivor.reload
+
     expect(survivor.infected).to eq(true)
   end
 
@@ -20,6 +26,9 @@ RSpec.describe Complaint, type: :model do
     10.times {
       Complaint.create!(survivor: survivor)
     }
+
+    survivor.reload
+
     expect(survivor.infected).to eq(true)
   end
 

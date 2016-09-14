@@ -26,7 +26,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem "trailblazer"
 gem "trailblazer-rails"
-# gem "cells"
+gem "responders"
+gem "roar", github: "apotonick/roar"
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -41,7 +42,6 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
   gem 'rspec-rails', '~> 3.5'
-  gem 'factory_girl'
   gem 'pry'
 end
 

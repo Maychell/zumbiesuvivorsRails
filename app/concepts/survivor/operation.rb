@@ -1,21 +1,50 @@
-
+class Survivor < ActiveRecord::Base
   class Create < Trailblazer::Operation
-  	# include Resolver
-   #  include Representer
     include Model
-  	model Survivor, :create
+    model Survivor, :create
 
   	contract do
-  		property :name, validates: {presence: true}
-  		property :age, validates: {presence: true}
-  		property :gender, validates: {presence: true}
+  		property :name,     validates: { presence: true }
+  		property :age,      validates: { presence: true, numericality: { greater_than: 1, less_than: 105, message: "invalid age" } }
+  		property :gender,   validates: { presence: true }
+      property :latitude
+      property :longitude
+      collection :items
   	end
 
   	def process(params)
-	    model = Survivor.new
-
-	    validate(params[:survivor]) do |f|
-	      f.save
-	    end
-	  end
+      validate(params[:survivor]) do |f|
+        f.save
+      end
+    end
   end
+
+  class Update < Create
+    action :update
+
+    contract do
+      property :name, writeable: false
+      property :age, writeable: false
+      property :gender, writeable: false
+
+      if :infected
+        property :items, writeable: false
+      end
+    end
+  end
+
+  class SetInfected < Create
+    action :update
+
+    def process(params)
+      set_infected!
+    end
+
+    private
+
+    def set_infected!
+      model.infected = true
+      model.save!
+    end
+  end
+end
