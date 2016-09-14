@@ -1,19 +1,14 @@
 class TradeOperation
 	class Create < Trailblazer::Operation
 
-		# contract do
-		# 	binding.pry
-		# 	validate :valid_trade?
-		# end
-
 		def process(params)
 			init(params)
 
 			return false unless valid_trade?
 
-			# validate(params) do |f|
-        trade!
-      # end
+			validate(params) do |f|
+	    	trade!
+	    end
 		end
 
 		private
