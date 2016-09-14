@@ -56,8 +56,8 @@ RSpec.describe Trade, type: :model do
       ]
     }
 
-    trade = Trade.new(params)
-    TradeService.new(trade).call
+    # trade = Trade.new(params)
+    TradeService.new(params).call
 
     expect(survivor).to have_items([food.name, ammunition.name, food.name, ammunition.name])
     expect(survivor2).to have_items([water.name, medication.name])
@@ -95,8 +95,8 @@ RSpec.describe Trade, type: :model do
       ]
     }
 
-    trade = Trade.new(params)
-    TradeService.new(trade).call
+    # trade = Trade.new(params)
+    TradeService.new(params).call
 
     expect(survivor1).to have_items([water.name, food.name, food.name])
     expect(survivor2).to have_items([medication.name, ammunition.name, water.name, medication.name])
@@ -132,8 +132,8 @@ RSpec.describe Trade, type: :model do
       ]
     }
 
-    trade = Trade.new(params)
-    TradeService.new(trade).call
+    # trade = Trade.new(params)
+    TradeService.new(params).call
 
     expect(survivor).to have_items([water.name, food.name, ammunition.name])
     expect(survivor2).to have_items([food.name, medication.name, water.name])
@@ -165,8 +165,8 @@ RSpec.describe Trade, type: :model do
       ]
     }
 
-    trade = Trade.new(params)
-    TradeService.new(trade).call
+    # trade = Trade.new(params)
+    TradeService.new(params).call
 
     expect(survivor).to have_items([food.name, water.name, ammunition.name])
     expect(survivor2).to have_items([food.name, medication.name, water.name])
@@ -198,8 +198,8 @@ RSpec.describe Trade, type: :model do
       ]
     }
 
-    trade = Trade.new(params)
-    TradeService.new(trade).call
+    # trade = Trade.new(params)
+    TradeService.new(params).call
 
     expect(survivor).to have_items([water.name, food.name, ammunition.name])
     expect(survivor2).to have_items([food.name, medication.name, water.name])
