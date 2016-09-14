@@ -1,32 +1,43 @@
-<% if @contract && @contract.errors.full_messages.any? %>
-  <% @contract.errors.full_messages.each do |error_message| %>
-    <%= error_message if @contract.errors.full_messages.first == error_message %> <br />
+<% if @form && @form.errors.full_messages.any? %>
+  <% @form.errors.full_messages.each do |error_message| %>
+    <%= error_message if @form.errors.full_messages.first == error_message %> <br />
   <% end %>
 <% end %>
 
-<%= form_for @survivor do |f| %>
-	<div>
-		<%= f.label :name %>
-		<%= f.text_field :name %>
-	</div>
-	<div>
-		<%= f.label :age %>
-		<%= f.number_field :age %>
-	</div>
-	<div>
-		<%= f.label :gender %>
-		<%= f.select :gender, ["male", "female"] %>
-	</div>
-	<h2>ITEMS</h2>
-	<%= f.fields_for :inventories do |inventory| %>
-		<div class="inventory_item">
-			<%= inventory.label :item_id %>
-			<%= inventory.select :item_id, options_for_select(Item.all.collect { |item| [item.name, item.id] }, 0), {} %>
-      <a href="#" id="add_item">add item</a>
+<div>
+	<%= form_for @form do |f| %>
+		<div>
+			<%= f.label :name %>
+			<%= f.text_field :name, readonly: @form.readonly?(:name) %>
 		</div>
+		<div>
+			<%= f.label :age %>
+			<%= f.number_field :age, readonly: @form.readonly?(:age) %>
+		</div>
+		<div>
+			<%= f.label :gender %>
+			<%= f.select :gender, ["male", "female"] %>
+		</div>
+		<div>
+			<%= f.label :latitude %>
+			<%= f.text_field :latitude %>
+		</div>
+		<div>
+			<%= f.label :longitude %>
+			<%= f.text_field :longitude %>
+		</div>
+		<h2>ITEMS</h2>
+		<%= f.fields_for :inventories do |inventory| %>
+			<div class="inventory_item">
+				<%= inventory.label :item_id %>
+				<%= inventory.select :item_id, options_for_select(Item.all.collect { |item| [item.name, item.id] }, 0), {} %>
+	      <a href="#" id="add_item">add item</a>
+			</div>
+		<% end %>
+		<%= f.submit %>
 	<% end %>
-	<%= f.submit %>
-<% end %>
+</div>
+
 <script type="text/javascript">
 $(document).ready(function(){
   $("#add_item").click(function(){

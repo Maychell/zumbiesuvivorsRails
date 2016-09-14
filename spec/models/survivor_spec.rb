@@ -26,7 +26,7 @@ RSpec.describe Survivor, type: :model do
       expect(survivor.model.persisted?).to eq(false)
       expect(survivor.contract.errors.to_h[:name]).to eq("can't be blank")
       expect(survivor.contract.errors.to_h[:age]).to eq("invalid age")
-      expect(survivor.contract.errors.to_h[:gender]).to eq("invalid gender")
+      expect(survivor.contract.errors.to_h[:gender]).to eq("can't be blank")
     end
 
     it "survivors order by id" do
@@ -58,7 +58,7 @@ RSpec.describe Survivor, type: :model do
     end
 
     it "test items when creating survivor" do
-      survivor1 = survivor = Survivor::Create.(
+      survivor1 = Survivor::Create.(
         survivor: { name: "Rails", age: 12, gender: :male, items: [items['1 Water'], items['1 Food'], items['1 Ammunition']] }
       ).model
 

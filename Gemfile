@@ -27,6 +27,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem "trailblazer"
 gem "trailblazer-rails"
 gem "responders"
+gem "roar", github: "apotonick/roar"
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

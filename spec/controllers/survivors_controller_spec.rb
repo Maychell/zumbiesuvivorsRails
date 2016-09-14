@@ -46,11 +46,22 @@ RSpec.describe SurvivorsController, type: :controller do
     expect(assigns(:survivors)).to match_array([survivor, survivor2])
   end
 
-  # fix this test
   it "creates a new survivor" do
     expect{
       post :create, { survivor: { name: "Rails", age: 14, gender: :female } }
     }.to change(Survivor,:count).by(1)
+  end
+
+  # didn't finish yet
+  it "tests json format response" do
+    post :create, { survivor: { name: "Rails", age: 14, gender: :female } },
+      { 'Accept' => Mime::JSON, 'Content-Type' => Mime::JSON.to_s }
+
+    assert_equal Mime::JSON, response.content_type
+    # post :create, { survivor: { name: "Rails", age: 14, gender: :female } }, { 'Accept' => Mime::JSON }
+    # puts 'teste: '
+    # puts response.content_type
+    # assert_equal Mime::JSON, response.content_type
   end
 
   it "updates a survivor location" do

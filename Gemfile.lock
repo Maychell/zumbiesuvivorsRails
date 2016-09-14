@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/apotonick/roar.git
+  revision: 5d3c2f15552b09a6b5b01ab87a6ba6df3c16e744
+  specs:
+    roar (1.0.3)
+      representable (>= 2.4.0, < 3.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -210,6 +217,7 @@ DEPENDENCIES
   pry
   rails (= 4.2.4)
   responders
+  roar!
   rspec-rails (~> 3.5)
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
