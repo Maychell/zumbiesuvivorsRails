@@ -1,15 +1,13 @@
 class TradeService
-  def initialize(trade)
-    @trade = trade
+  def initialize(trade_params)
+    @trade = Trade.new(trade_params)
   end
 
 	def call
-    if valid_trade?
-      trade!
-      true
-    else
-      false
-    end
+    return false unless valid_trade?
+
+    trade!
+    return true
 	end
 
   private
