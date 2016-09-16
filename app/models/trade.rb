@@ -1,15 +1,15 @@
 class Trade
-	attr_reader :trade
+  attr_reader :trade
 
-	def initialize(params)
+  def initialize(params)
     @trade = trade_init(params)
-	end
+  end
 
-	def valid?
+  def valid?
     !@trade[:left][:survivor].infected &&
     (@trade[:left][:items] - @trade[:left][:survivor].items).empty? &&
     (@trade[:right][:items] - @trade[:right][:survivor].items).empty?
-	end
+  end
 
   def same_items_amount?
     left_amount = items_count(@trade[:left][:items])

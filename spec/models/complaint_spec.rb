@@ -10,40 +10,48 @@ RSpec.describe Complaint, type: :model do
     ).model
   }
 
-  it "check infected by creating complaints" do
-    expect(survivor.infected).to eq(false)
+  context 'when survivor has no complaints' do
+    it "check infected by creating complaints" do
+      expect(survivor.infected).to be_falsey
+    end
   end
 
-  it "set infected by number of complaints" do
-    3.times {
-      Complaint::Create.(
-        complaint: { survivor_id: survivor.id }
-      )
-    }
+  context 'when survivor has 1 complaint' do
+    it 'is not infected' do
+      Complaint::Create.(complaint: { survivor_id: survivor.id })
 
-    survivor.reload
-
-    expect(survivor.infected).to eq(true)
+      expect(survivor.reload.infected).to be_falsey
+    end
   end
 
-  it "check infected by over number of complaints" do
-    10.times {
-      Complaint::Create.(
-        complaint: { survivor_id: survivor.id }
-      )
-    }
-
-    survivor.reload
-
-    expect(survivor.infected).to eq(true)
+  context 'when survivor has 2 complaints' do
+    it 'is not infected' do
+      2.times {
+        Complaint::Create.(
+          complaint: { survivor_id: survivor.id }
+        )
+      }
+      expect(survivor.infected).to be_falsey
+    end
   end
 
-  it "check infected by two complaints" do
-    2.times {
-      Complaint::Create.(
-        complaint: { survivor_id: survivor.id }
-      )
-    }
-    expect(survivor.infected).to eq(false)
+  context 'when survivor has 3 complaints' do
+    it 'is infected' do
+      3.times {
+        Complaint::Create.(complaint: { survivor_id: survivor.id })
+      }
+
+      expect(survivor.reload.infected).to be_truthy
+    end
+  end
+
+  context 'when survivor has 10 complaints' do
+    it 'is infected' do
+      10.times {
+        Complaint::Create.(complaint: { survivor_id: survivor.id })
+      }
+
+      expect(survivor.reload.infected).to be_truthy
+    end
   end
 end

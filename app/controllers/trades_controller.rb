@@ -1,9 +1,9 @@
 class TradesController < ApplicationController
-	skip_before_action :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
   
   respond_to :json, :html
 
-	def create
+  def create
     respond TradeOperation::Create do |op, format|
       if op.valid?
         format.html { render :new }
@@ -13,5 +13,5 @@ class TradesController < ApplicationController
         format.json { render json: op.errors, status: :unprocessable_entity }
       end
     end
-	end
+  end
 end

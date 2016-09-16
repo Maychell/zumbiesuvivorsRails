@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe SurvivorsController, type: :controller do
 
+  let(:items) { Item.all.map { |item| [item.name, item] }.to_h }
   let(:survivor) {
     Survivor::Create.(
       survivor: {
@@ -54,7 +55,7 @@ RSpec.describe SurvivorsController, type: :controller do
 
   # didn't finish yet
   it "tests json format response" do
-    form = { survivor: { name: "Rails", age: 14, gender: :female } }
+    form = { survivor: { name: "Rails", age: 14, gender: :female, items: [items['1 Water'], items['1 Food'], items['1 Ammunition']] } }
     post :create, form.to_json, form.merge(format: 'json')
 
     assert_equal Mime::JSON, response.content_type

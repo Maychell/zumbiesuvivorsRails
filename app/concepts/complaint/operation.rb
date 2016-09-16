@@ -1,29 +1,30 @@
 class Complaint < ActiveRecord::Base
   class Create < Trailblazer::Operation
+    MAX_NUMBER_OF_COMPLAINTS = 3
+
     include Model
     model Complaint, :create
 
     contract do
-	    property :survivor_id
-	  end
+      property :survivor_id
+    end
 
-  	def process(params)
-      validate(params[:complaint]) do |f|
-        f.save
+    def process(params)
+      validate(params[:complaint]) do |form|
+        form.save
 
-        check_number_of_complaints!(params[:complaint][:survivor_id])
+        on_high_number_of_complaints { set_survivor_as_infected }
       end
     end
 
     private
 
-    def check_number_of_complaints!(survivor_id)
-			if Complaint.where(survivor_id: survivor_id).count >= 3
-				Survivor::SetInfected.(
-		      id: survivor_id
-		    )
-				return false
-			end
-		end
+    def on_high_number_of_complaints
+      yield if model.survivor.complaints.count >= MAX_NUMBER_OF_COMPLAINTS
+    end
+
+    def set_survivor_as_infected
+      model.survivor.mark_infected
+    end
   end
 end
