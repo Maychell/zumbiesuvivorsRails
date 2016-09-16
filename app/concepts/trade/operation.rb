@@ -1,29 +1,29 @@
 class TradeOperation
-	class Create < Trailblazer::Operation
+  class Create < Trailblazer::Operation
 
-		def process(params)
-			init(params)
+    def process(params)
+      init(params)
 
-			return false unless valid_trade?
+      return false unless valid_trade?
 
-			validate(params) do |f|
-	    	trade!
-	    end
-		end
+      validate(params) do |f|
+        trade!
+      end
+    end
 
-		private
+    private
 
-		def init(trade_params)
-			@trade = Trade.new(trade_params)
-		end
+    def init(trade_params)
+      @trade = Trade.new(trade_params)
+    end
 
-	  def valid_trade?
-	    @trade.valid? && @trade.same_items_amount?
-	  end
+    def valid_trade?
+      @trade.valid? && @trade.same_items_amount?
+    end
 
-	  def trade!
-	    @trade.trade!
-	  end
+    def trade!
+      @trade.trade!
+    end
 
-	end
+  end
 end

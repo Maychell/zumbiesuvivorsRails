@@ -101,9 +101,7 @@ RSpec.describe Trade, type: :model do
   end
 
   it "test trade when it's infected survivor" do
-    Survivor::SetInfected.(
-      id: survivor.id
-    )
+    survivor.mark_infected
 
     survivor2 = Survivor::Create.(
       survivor: {
