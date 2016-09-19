@@ -27,10 +27,10 @@
       <%= f.text_field :longitude %>
     </div>
     <h2>ITEMS</h2>
-    <%= f.fields_for :inventories do |inventory| %>
-      <div class="inventory_item">
-        <%= inventory.label :item_id %>
-        <%= inventory.select :item_id, options_for_select(Item.all.collect { |item| [item.name, item.id] }, 0), {} %>
+    <%= f.fields_for :items do |item| %>
+      <div class="item_item">
+        <%= item.label :item_id %>
+        <%= item.select :item_id, options_for_select(Item.all.collect { |item| [item.name, item.id] }, 0), {} %>
         <a href="#" id="add_item">add item</a>
       </div>
     <% end %>

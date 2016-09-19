@@ -53,6 +53,17 @@ RSpec.describe SurvivorsController, type: :controller do
     }.to change(Survivor,:count).by(1)
   end
 
+  it "teste com items" do
+    form = { survivor: { name: "Rails", age: 14, gender: :female, items: [items['1 Water'], items['1 Food'], items['1 Ammunition']] } }
+    post :create, form.to_json, form.merge(format: 'json')
+
+    # binding.pry
+    
+    surv = Survivor.last
+
+    assert_equal surv.items.count, 3
+  end
+
   # didn't finish yet
   it "tests json format response" do
     form = { survivor: { name: "Rails", age: 14, gender: :female, items: [items['1 Water'], items['1 Food'], items['1 Ammunition']] } }

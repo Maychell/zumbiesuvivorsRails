@@ -3,8 +3,6 @@ class Survivor < ActiveRecord::Base
   has_many :inventories, dependent: :destroy
   has_many :items, through: :inventories
 
-  accepts_nested_attributes_for :items
-
   enum gender: %i[ male female ]
 
   # set default order query
