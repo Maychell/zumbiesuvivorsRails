@@ -1,9 +1,9 @@
 class Complaint < ActiveRecord::Base
   class Create < Trailblazer::Operation
-    MAX_NUMBER_OF_COMPLAINTS = 3
-
     include Model
     model Complaint, :create
+    
+    MAX_NUMBER_OF_COMPLAINTS = 3
 
     contract do
       property :survivor_id

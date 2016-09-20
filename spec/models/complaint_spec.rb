@@ -11,7 +11,7 @@ RSpec.describe Complaint, type: :model do
   }
 
   context 'when survivor has no complaints' do
-    it "check infected by creating complaints" do
+    it 'checks infected by creating complaints' do
       expect(survivor.infected).to be_falsey
     end
   end

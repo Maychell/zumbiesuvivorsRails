@@ -8,21 +8,21 @@ module Survivor::Contract
     property :latitude
     property :longitude
 
-    collection :items, populator: :user!
+    collection :items, populator: :populate_items!
 
     private
 
-    def user!(options)
-      item_ids = []
-      options[:doc]['items'].each { |item| item_ids << item[:id] }
-      item = Item.where(id: item_ids)
-      items.append(item) if item
+    def populate_items!(options)
+      options[:doc]['items'].each do |item_form|
+        item = Item.find(item_form[:id])
+
+        items.append(item) if item
+      end
     end
 
   end
 
   class Update < Create
-
     property :name, writeable: false
     property :age, writeable: false
     property :gender, writeable: false

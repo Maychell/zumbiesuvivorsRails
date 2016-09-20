@@ -3,12 +3,7 @@ class Item < ActiveRecord::Base
     include Model
     model Item, :create
 
-    contract do
-      property :name,  validates: { presence: true }
-      property :points
-
-      validates_uniqueness_of :name
-    end
+    contract Contract::Create
 
     def process(params)
       validate(params[:item]) do |f|

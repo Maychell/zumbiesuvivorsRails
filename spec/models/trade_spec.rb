@@ -12,7 +12,7 @@ RSpec::Matchers.define :have_items do |expected|
   failure_message do |survivor|
     item_names = extract_items(survivor)
 
-    "Expected #{survivor.name} to have items #{expected} but had #{item_names} instead"
+    'Expected #{survivor.name} to have items #{expected} but had #{item_names} instead'
   end
 end
 
@@ -31,170 +31,178 @@ RSpec.describe Trade, type: :model do
     ).model
   }
 
-  it "test sucessiful trade non-repeating items" do
-    survivor2 = Survivor::Create.(
-      survivor: {
-        name: "Rails", age: 14, gender: :female, items: [food, medication, ammunition]
-      }
-    ).model
-
-    params = {
-      trade:[
-        {
-          survivor_id: survivor.id,
-          items:[
-            { id: water.id }
-          ]
-        },
-        {
-          survivor_id: survivor2.id,
-          items:[
-            { id: food.id },
-            { id: ammunition.id }
-          ]
+  context 'when the trade is valid' do
+    it "with non-repeated items, the survivor's items are traded" do
+      survivor2 = Survivor::Create.(
+        survivor: {
+          name: "Rails", age: 14, gender: :female, items: [food, medication, ammunition]
         }
-      ]
-    }
+      ).model
 
-    TradeOperation::Create.(params)
+      params = {
+        trade:[
+          {
+            survivor_id: survivor.id,
+            items:[
+              { id: water.id }
+            ]
+          },
+          {
+            survivor_id: survivor2.id,
+            items:[
+              { id: food.id },
+              { id: ammunition.id }
+            ]
+          }
+        ]
+      }
 
-    expect(survivor).to have_items([food.name, ammunition.name, food.name, ammunition.name])
-    expect(survivor2).to have_items([water.name, medication.name])
+      TradeOperation::Create.(params)
+
+      expect(survivor).to have_items([food.name, ammunition.name, food.name, ammunition.name])
+      expect(survivor2).to have_items([water.name, medication.name])
+    end
+
+    it "with repeated items the survivor's items are traded" do
+      survivor1 = Survivor::Create.(
+        survivor: {
+          name: "Rails", age: 14, gender: :female, items: [water, medication, water]
+        }
+      ).model
+
+      survivor2 = Survivor::Create.(
+        survivor: {
+          name: "Rails", age: 14, gender: :female, items: [food, medication, ammunition, food]
+        }
+      ).model
+
+      params = {
+        trade:[
+          {
+            survivor_id: survivor1.id,
+            items:[
+              { id: water.id },
+              { id: medication.id },
+            ]
+          },
+          {
+            survivor_id: survivor2.id,
+            items:[
+              { id: food.id },
+              { id: food.id }
+            ]
+          }
+        ]
+      }
+
+      TradeOperation::Create.(params)
+
+      expect(survivor1).to have_items([water.name, food.name, food.name])
+      expect(survivor2).to have_items([medication.name, ammunition.name, water.name, medication.name])
+    end
   end
 
-  it "test sucessiful trade repeating items" do
-    survivor1 = Survivor::Create.(
-      survivor: {
-        name: "Rails", age: 14, gender: :female, items: [water, medication, water]
-      }
-    ).model
+  context 'when at least one of the parts of the trade is infected' do
+    it "the survivors' items are not traded" do
+      survivor.mark_infected
 
-    survivor2 = Survivor::Create.(
-      survivor: {
-        name: "Rails", age: 14, gender: :female, items: [food, medication, ammunition, food]
-      }
-    ).model
-
-    params = {
-      trade:[
-        {
-          survivor_id: survivor1.id,
-          items:[
-            { id: water.id },
-            { id: medication.id },
-          ]
-        },
-        {
-          survivor_id: survivor2.id,
-          items:[
-            { id: food.id },
-            { id: food.id }
-          ]
+      survivor2 = Survivor::Create.(
+        survivor: {
+          name: "test", age: 12, gender: :male, items: [food, medication, water]
         }
-      ]
-    }
+      ).model
 
-    TradeOperation::Create.(params)
+      params = {
+        trade:[
+          {
+            survivor_id: survivor.id,
+            items:[
+              { id: water.id },
+              { id: ammunition.id }
+            ]
+          },
+          {
+            survivor_id: survivor2.id,
+            items:[
+              { id: food.id },
+              { id: medication.id }
+            ]
+          }
+        ]
+      }
 
-    expect(survivor1).to have_items([water.name, food.name, food.name])
-    expect(survivor2).to have_items([medication.name, ammunition.name, water.name, medication.name])
+      TradeOperation::Create.(params)
+
+      expect(survivor).to have_items([water.name, food.name, ammunition.name])
+      expect(survivor2).to have_items([food.name, medication.name, water.name])
+    end
   end
 
-  it "test trade when it's infected survivor" do
-    survivor.mark_infected
-
-    survivor2 = Survivor::Create.(
-      survivor: {
-        name: "test", age: 12, gender: :male, items: [food, medication, water]
-      }
-    ).model
-
-    params = {
-      trade:[
-        {
-          survivor_id: survivor.id,
-          items:[
-            { id: water.id },
-            { id: ammunition.id }
-          ]
-        },
-        {
-          survivor_id: survivor2.id,
-          items:[
-            { id: food.id },
-            { id: medication.id }
-          ]
+  context 'when at least one of the survivor does not own the item' do
+    it "the survivors' items are not traded" do
+      survivor2 = Survivor::Create.(
+        survivor: {
+          name: "test", age: 12, gender: :male, items: [food, medication, water]
         }
-      ]
-    }
+      ).model
 
-    TradeOperation::Create.(params)
+      params = {
+        trade:[
+          {
+            survivor_id: survivor.id,
+            items:[
+              {id: medication.id},
+              {id: food.id}
+            ]
+          },
+          {
+            survivor_id: survivor2.id,
+            items:[
+              {id: food.id},
+              {id: medication.id}
+            ]
+          }
+        ]
+      }
 
-    expect(survivor).to have_items([water.name, food.name, ammunition.name])
-    expect(survivor2).to have_items([food.name, medication.name, water.name])
+      TradeOperation::Create.(params)
+
+      expect(survivor).to have_items([food.name, water.name, ammunition.name])
+      expect(survivor2).to have_items([food.name, medication.name, water.name])
+    end
   end
 
-  it "test with items that the survivor doesn't own" do
-    survivor2 = Survivor::Create.(
-      survivor: {
-        name: "test", age: 12, gender: :male, items: [food, medication, water]
-      }
-    ).model
-
-    params = {
-      trade:[
-        {
-          survivor_id: survivor.id,
-          items:[
-            {id: medication.id},
-            {id: food.id}
-          ]
-        },
-        {
-          survivor_id: survivor2.id,
-          items:[
-            {id: food.id},
-            {id: medication.id}
-          ]
+  context "when the items's amount of points is different from each other" do
+    it "the survivor's items are not traded" do
+      survivor2 = Survivor::Create.(
+        survivor: {
+          name: "test", age: 12, gender: :male, items: [food, medication, water]
         }
-      ]
-    }
+      ).model
 
-    TradeOperation::Create.(params)
-
-    expect(survivor).to have_items([food.name, water.name, ammunition.name])
-    expect(survivor2).to have_items([food.name, medication.name, water.name])
-  end
-
-  it "test items with different sum of points" do
-    survivor2 = Survivor::Create.(
-      survivor: {
-        name: "test", age: 12, gender: :male, items: [food, medication, water]
+      params = {
+        trade:[
+          {
+            survivor_id: survivor.id,
+            items:[
+              {id: water.id},
+              {id: food.id}
+            ]
+          },
+          {
+            survivor_id: survivor2.id,
+            items:[
+              {id: food.id},
+              {id: medication.id}
+            ]
+          }
+        ]
       }
-    ).model
 
-    params = {
-      trade:[
-        {
-          survivor_id: survivor.id,
-          items:[
-            {id: water.id},
-            {id: food.id}
-          ]
-        },
-        {
-          survivor_id: survivor2.id,
-          items:[
-            {id: food.id},
-            {id: medication.id}
-          ]
-        }
-      ]
-    }
+      TradeOperation::Create.(params)
 
-    TradeOperation::Create.(params)
-
-    expect(survivor).to have_items([water.name, food.name, ammunition.name])
-    expect(survivor2).to have_items([food.name, medication.name, water.name])
+      expect(survivor).to have_items([water.name, food.name, ammunition.name])
+      expect(survivor2).to have_items([food.name, medication.name, water.name])
+    end
   end
 end

@@ -7,10 +7,9 @@ RSpec.describe Survivor, type: :model do
     Survivor::Create.(survivor: params).model
   end
 
-  describe "Create tests" do
-
+  describe 'Create tests' do
     context 'with valid attributes' do
-      it "is persisted" do
+      it 'is persisted' do
         survivor = create_survivor(name: "Rails", age: 12, gender: :male)
 
         expect(survivor).to be_persisted
@@ -23,7 +22,7 @@ RSpec.describe Survivor, type: :model do
     end
 
     context 'with invalid attributes' do
-      it "is not persisted and has validation errors" do
+      it 'is not persisted and has validation errors' do
         res, survivor = Survivor::Create.run(
           survivor: { name: "", age: 106, gender: "" }
         )
@@ -38,7 +37,7 @@ RSpec.describe Survivor, type: :model do
       end
     end
 
-    it "with survivors ordered by id" do
+    it 'with survivors ordered by id' do
       fulano    = create_survivor(name: "Rails", age: 12, gender: :male)
       chelimsky = create_survivor(name: "chelimsky", age: 12, gender: :male)
       joao      = create_survivor(name: "Joao", age: 12, gender: :male )
@@ -56,14 +55,14 @@ RSpec.describe Survivor, type: :model do
       end
     end
 
-    it "survivor set infected" do
+    it 'survivor set infected' do
       survivor = create_survivor(name: "Rails", age: 12, gender: :male)
       survivor.mark_infected
 
       expect(survivor).to be_infected
     end
 
-    it "with items" do
+    it 'with items' do
       survivor = create_survivor(
         name: "Rails",
         age: 12,
@@ -80,7 +79,7 @@ RSpec.describe Survivor, type: :model do
       expect(survivor.items).to eq([items['1 Water'], items['1 Food'], items['1 Ammunition']])
     end
 
-    it "with latitude and longitude" do
+    it 'with latitude and longitude' do
       survivor = create_survivor(
         name: "survivor",
         age: 20,
@@ -94,8 +93,7 @@ RSpec.describe Survivor, type: :model do
     end
   end
 
-  describe "Update actions" do
-
+  describe 'Update actions' do
     it "with survivor's location" do
       survivor = create_survivor(name: "Rails", age: 12, gender: :male)
 

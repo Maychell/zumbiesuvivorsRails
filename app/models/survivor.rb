@@ -5,7 +5,6 @@ class Survivor < ActiveRecord::Base
 
   enum gender: %i[ male female ]
 
-  # set default order query
   default_scope { order(:id) }
 
   def mark_infected

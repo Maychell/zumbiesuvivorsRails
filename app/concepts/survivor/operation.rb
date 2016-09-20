@@ -6,8 +6,6 @@ class Survivor < ActiveRecord::Base
     contract Contract::Create
 
     def process(params)
-      # binding.pry
-      # binding.pry
       validate(params[:survivor]) do |f|
         f.save
       end

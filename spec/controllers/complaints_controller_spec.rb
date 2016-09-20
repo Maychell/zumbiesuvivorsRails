@@ -10,31 +10,37 @@ RSpec.describe ComplaintsController, type: :controller do
   
   let(:attributes) { { survivor_id: survivor.id } }
 
-  it "responds successfully with an HTTP 200 status code" do
-    get :new
-    expect(response).to be_success
-    expect(response).to have_http_status(200)
+  context 'when call the new template' do
+    it 'responds successfully with an HTTP 200 status code' do
+      get :new
+      expect(response).to be_success
+      expect(response).to have_http_status(200)
+    end
   end
 
-  it "creates a new complaint" do
-    expect{
-      post :create, { :complaint => attributes }
-    }.to change(Complaint,:count).by(1)
+  context 'when creating a complaint' do
+    it 'increases the number of complaints' do
+      expect{
+        post :create, { :complaint => attributes }
+      }.to change(Complaint,:count).by(1)
+    end
   end
 
-  it "flags a survivor as infected by creating three complaints" do
-    expect(survivor.infected).to eq(false) # the survivor starts as uninfected
+  context 'when creating two complaints' do
+    it 'the survivor is not flagged as infected' do
+      2.times { post :create, { :complaint => attributes } }
 
-    3.times { post :create, { :complaint => attributes } }
-    survivor.reload
-
-    expect(survivor.infected).to eq(true)
+      expect(survivor.reload.infected).to eq(false)
+    end
   end
 
-  it "checks if a survivor is tagged as infected by creating two complaints" do
-    2.times { post :create, { :complaint => attributes } }
-    survivor.reload
+  context 'when creating three complaints' do
+    it 'the survivor is flagged as infected' do
+      expect(survivor.infected).to eq(false) # the survivor starts as uninfected
 
-    expect(survivor.infected).to eq(false)
+      3.times { post :create, { :complaint => attributes } }
+
+      expect(survivor.reload.infected).to eq(true)
+    end
   end
 end
